@@ -1,0 +1,8 @@
+#!/bin/sh -ex
+
+LDAP_PASS=turnkey
+LDAP_DOMAIN=example.com
+
+SRC=/usr/local/src
+WEBROOT=/var/www/phpldapadmin
+
