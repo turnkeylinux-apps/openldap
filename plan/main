@@ -1,0 +1,11 @@
+#include <turnkey/base>
+
+slapd
+ldap-utils
+ldapscripts
+gnutls-bin
+
+lighttpd
+php5-cgi
+php5-ldap
+
