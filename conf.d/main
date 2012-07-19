@@ -11,3 +11,17 @@ tar -zxf $SRC/phpldapadmin-*.tgz -C $(dirname $WEBROOT)
 rm $SRC/phpldapadmin-*.tgz
 mv $(dirname $WEBROOT)/phpldapadmin-* $WEBROOT
 
+# phpldapadmin: create base configuration
+cat >$WEBROOT/config/config.php<<EOF
+<?php
+// phpLDAPadmin configuration
+
+\$config->custom->appearance['hide_template_warning'] = true;
+
+\$servers = new Datastore();
+\$servers->newServer('ldap_pla');
+\$servers->setValue('server','name','TurnKey OpenLDAP');
+\$servers->setValue('login','bind_id','');
+?>
+EOF
+
