@@ -29,3 +29,7 @@ EOF
 CONF=$WEBROOT/lib/page.php
 sed -i "s|</body>.*|<div id=\"turnkey-credit\" style=\"text-align:center;font-size:11px;\"><a href=\"http://www.turnkeylinux.org/openldap\">OpenLDAP Appliance</a> - Powered by <a href=\"http://www.turnkeylinux.org\">TurnKey Linux</a></div></body>';|" $CONF
 
+# phpldapadmin: enable in lighttpd
+lighty-disable-mod ssl
+lighty-enable-mod phpldapadmin
+
