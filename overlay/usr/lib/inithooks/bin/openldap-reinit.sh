@@ -26,6 +26,11 @@ LDAP_DOMAIN=$1
 LDAP_PASS=$2
 LDAP_BASEDN="dc=`echo $LDAP_DOMAIN | sed 's/^\.//; s/\./,dc=/g'`"
 
+TLS=/etc/ldap/tls
+TLS_CA_CRT=$TLS/ca_cert.pem
+TLS_LDAP_KEY=$TLS/openldap_key.pem
+TLS_LDAP_CRT=$TLS/openldap_crt.pem
+
 SLAPD_RUNNING=$(/etc/init.d/slapd status > /dev/null; echo $?)
 
 # re-configure ldap
@@ -62,6 +67,25 @@ dn: ou=Users,$LDAP_BASEDN
 objectclass: organizationalUnit
 objectclass: top
 ou: Users
+EOL
+
+# configure TLS
+ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
+dn: cn=config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: $TLS_CA_CRT
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: $TLS_LDAP_CRT
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: $TLS_LDAP_KEY
+-
+add: olcTLSCipherSuite
+olcTLSCipherSuite: normal
+-
+add: olcTLSVerifyClient
+olcTLSVerifyClient: never
 EOL
 
 # update phpldapadmin

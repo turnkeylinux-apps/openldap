@@ -1,0 +1,5 @@
+organization = TurnKey OpenLDAP
+cn = ldap
+tls_www_server
+encryption_key
+signing_key

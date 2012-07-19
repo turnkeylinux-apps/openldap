@@ -41,6 +41,11 @@ sed -i "s|^#SUFFIX|SUFFIX|" $CONF
 sed -i "s|^#GSUFFIX|GSUFFIX|" $CONF
 sed -i "s|^#USUFFIX|USUFFIX|" $CONF
 
-# re-initialize ldap
+# enabled ldaps for TLS
+CONF=/etc/default/slapd
+sed -i "s|^SLAPD_SERVICES.*|SLAPD_SERVICES=\"ldap:/// ldapi:/// ldaps:///\"|" $CONF
+
+# generate TLS certs and re-initialize ldap
+/usr/lib/inithooks/firstboot.d/20regen-openldap-secrets
 /usr/lib/inithooks/bin/openldap.py --domain=$LDAP_DOMAIN --pass=$LDAP_PASS
 
