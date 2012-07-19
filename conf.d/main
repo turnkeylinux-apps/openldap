@@ -6,3 +6,8 @@ LDAP_DOMAIN=example.com
 SRC=/usr/local/src
 WEBROOT=/var/www/phpldapadmin
 
+# phpldapadmin: unpack
+tar -zxf $SRC/phpldapadmin-*.tgz -C $(dirname $WEBROOT)
+rm $SRC/phpldapadmin-*.tgz
+mv $(dirname $WEBROOT)/phpldapadmin-* $WEBROOT
+
