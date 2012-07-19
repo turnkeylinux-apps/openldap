@@ -33,3 +33,11 @@ sed -i "s|</body>.*|<div id=\"turnkey-credit\" style=\"text-align:center;font-si
 lighty-disable-mod ssl
 lighty-enable-mod phpldapadmin
 
+# ldapscripts: enable params to be configured in inithook
+CONF=/etc/ldapscripts/ldapscripts.conf
+sed -i "s|^#SERVER|SERVER|" $CONF
+sed -i "s|^#BINDDN|BINDDN|" $CONF
+sed -i "s|^#SUFFIX|SUFFIX|" $CONF
+sed -i "s|^#GSUFFIX|GSUFFIX|" $CONF
+sed -i "s|^#USUFFIX|USUFFIX|" $CONF
+
