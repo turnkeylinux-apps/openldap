@@ -41,3 +41,6 @@ sed -i "s|^#SUFFIX|SUFFIX|" $CONF
 sed -i "s|^#GSUFFIX|GSUFFIX|" $CONF
 sed -i "s|^#USUFFIX|USUFFIX|" $CONF
 
+# re-initialize ldap
+/usr/lib/inithooks/bin/openldap.py --domain=$LDAP_DOMAIN --pass=$LDAP_PASS
+
