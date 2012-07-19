@@ -49,3 +49,6 @@ sed -i "s|^SLAPD_SERVICES.*|SLAPD_SERVICES=\"ldap:/// ldapi:/// ldaps:///\"|" $C
 /usr/lib/inithooks/firstboot.d/20regen-openldap-secrets
 /usr/lib/inithooks/bin/openldap.py --domain=$LDAP_DOMAIN --pass=$LDAP_PASS
 
+# remove backup from re-initialization
+rm -rf /var/backups/slapd-
+rm -rf /var/backups/*.ldapdb
