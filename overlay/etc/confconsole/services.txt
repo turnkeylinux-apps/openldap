@@ -1,0 +1,6 @@
+LDAP:      ldap://$ipaddr:389
+LDAP+TLS:  ldaps://$ipaddr:636
+LDAPadmin: https://$ipaddr
+Web shell: https://$ipaddr:12320
+Webmin:    https://$ipaddr:12321
+SSH/SFTP:  root@$ipaddr (port 22)
