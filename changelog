@@ -2,7 +2,7 @@ turnkey-openldap-12.1 (1) turnkey; urgency=low
 
   * Upgraded to latest version of phpLDAPadmin.
 
-  * Hardcoded component versions:
+  * Upstream source component versions:
 
     phpldapadmin    1.2.3
 
