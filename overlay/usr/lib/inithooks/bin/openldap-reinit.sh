@@ -25,6 +25,7 @@ fi
 LDAP_DOMAIN=$1
 LDAP_PASS=$2
 LDAP_BASEDN="dc=`echo $LDAP_DOMAIN | sed 's/^\.//; s/\./,dc=/g'`"
+LDAP_PASS_HASH=`slappasswd -h {ssha} -s $LDAP_PASS`
 
 TLS=/etc/ldap/tls
 TLS_CA_CRT=$TLS/ca_cert.pem
@@ -86,6 +87,14 @@ olcTLSCipherSuite: normal
 -
 add: olcTLSVerifyClient
 olcTLSVerifyClient: never
+EOL
+
+# configure olcRootPW
+ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: $LDAP_PASS_HASH
 EOL
 
 # update phpldapadmin
