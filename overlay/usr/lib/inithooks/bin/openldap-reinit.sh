@@ -99,6 +99,7 @@ EOL
 
 # update phpldapadmin
 CONF=/var/www/phpldapadmin/config/config.php
+sed -i "s|'base'.*|'base',array('cn=config','$LDAP_BASEDN'));|" $CONF
 sed -i "s|bind_id.*|bind_id','cn=admin,$LDAP_BASEDN');|" $CONF
 
 # update ldapscripts
