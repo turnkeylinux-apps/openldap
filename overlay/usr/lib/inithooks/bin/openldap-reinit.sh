@@ -92,7 +92,6 @@ EOL
 # configure olcRootPW
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
 dn: olcDatabase={0}config,cn=config
-changetype: modify
 replace: olcRootPW
 olcRootPW: $LDAP_PASS_HASH
 EOL
