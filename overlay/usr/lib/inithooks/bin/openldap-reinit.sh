@@ -88,6 +88,24 @@ add: olcTLSVerifyClient
 olcTLSVerifyClient: never
 EOL
 
+ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
+dn: olcDatabase={1}hdb,cn=config
+add: olcDbIndex
+olcDbIndex: cn eq,pres,sub
+olcDbIndex: sn eq,pres,sub
+olcDbIndex: ou eq,pres,sub
+olcDbIndex: uid eq,pres,sub
+olcDbIndex: displayName eq,pres,sub
+olcDbIndex: mail,givenName eq,subinitial
+olcDbIndex: uidNumber eq
+olcDbIndex: gidNumber eq
+olcDbIndex: loginShell eq
+olcDbIndex: memberUid eq,pres,sub
+olcDbIndex: uniqueMember eq,pres
+olcDbIndex: dc eq
+olcDbIndex: default sub
+EOL
+
 # update phpldapadmin
 CONF=/var/www/phpldapadmin/config/config.php
 sed -i "s|bind_id.*|bind_id','cn=admin,$LDAP_BASEDN');|" $CONF
