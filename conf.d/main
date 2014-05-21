@@ -21,6 +21,8 @@ cat >$WEBROOT/config/config.php<<EOF
 \$servers = new Datastore();
 \$servers->newServer('ldap_pla');
 \$servers->setValue('server','name','TurnKey OpenLDAP');
+\$servers->setValue('server','base',array('cn=config',''));
+\$servers->setValue('server','hide_noaccess_base','true');
 \$servers->setValue('login','bind_id','');
 ?>
 EOF
