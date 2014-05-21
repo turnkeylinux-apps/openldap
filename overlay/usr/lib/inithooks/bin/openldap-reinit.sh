@@ -25,6 +25,7 @@ fi
 LDAP_DOMAIN=$1
 LDAP_PASS=$2
 LDAP_BASEDN="dc=`echo $LDAP_DOMAIN | sed 's/^\.//; s/\./,dc=/g'`"
+LDAP_PASS_HASH=`slappasswd -h {ssha} -s $LDAP_PASS`
 
 TLS=/etc/ldap/tls
 TLS_CA_CRT=$TLS/ca_cert.pem
@@ -131,8 +132,16 @@ add: olcDbIndex
 olcDbIndex: default sub
 EOL
 
+# configure olcRootPW
+ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
+dn: olcDatabase={0}config,cn=config
+replace: olcRootPW
+olcRootPW: $LDAP_PASS_HASH
+EOL
+
 # update phpldapadmin
 CONF=/var/www/phpldapadmin/config/config.php
+sed -i "s|'base'.*|'base',array('cn=config','$LDAP_BASEDN'));|" $CONF
 sed -i "s|bind_id.*|bind_id','cn=admin,$LDAP_BASEDN');|" $CONF
 
 # update ldapscripts
