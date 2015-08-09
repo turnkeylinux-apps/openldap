@@ -7,9 +7,9 @@ SRC=/usr/local/src
 WEBROOT=/var/www/phpldapadmin
 
 # phpldapadmin: unpack
-tar -zxf $SRC/phpldapadmin-*.tgz -C $(dirname $WEBROOT)
-rm $SRC/phpldapadmin-*.tgz
-mv $(dirname $WEBROOT)/phpldapadmin-* $WEBROOT
+tar -zxf $SRC/master.tar.gz -C $(dirname $WEBROOT)
+rm $SRC/master.tar.gz
+mv $(dirname $WEBROOT)/phpLDAPadmin-* $WEBROOT
 
 # phpldapadmin: create base configuration
 cat >$WEBROOT/config/config.php<<EOF

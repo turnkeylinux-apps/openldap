@@ -5,8 +5,8 @@ dl() {
     cd $2; curl -L -f -O $PROXY $1; cd -
 }
 
-VERSION="1.2.3/phpldapadmin-1.2.3.tgz"
-URL="http://sourceforge.net/projects/phpldapadmin/files/phpldapadmin-php5/$VERSION"
+VERSION="master.tar.gz"
+URL="https://github.com/leenooks/phpLDAPadmin/archive/$VERSION"
 
 dl $URL /usr/local/src
 
