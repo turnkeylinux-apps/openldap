@@ -11,6 +11,7 @@ Option:
 import os
 import sys
 import getopt
+import inithooks_cache
 
 from dialog_wrapper import Dialog
 from executil import system
@@ -58,6 +59,8 @@ def main():
 
     if domain == "DEFAULT":
         domain = DEFAULT_DOMAIN
+
+    inithooks_cache.write('APP_DOMAIN', domain)
 
     script = os.path.join(os.path.dirname(__file__), 'openldap-reinit.sh')
     system(script, domain, password)
