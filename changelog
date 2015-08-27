@@ -1,3 +1,17 @@
+turnkey-openldap-14.0 (1) turnkey; urgency=low
+
+  * Latest Debian Jessie package version of OpenLDAP.
+
+  * Lastest phpldap installed from upstream git
+
+  * Other maintence work performed by Jonathan Struebel
+    https://github.com/jstruebel
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.i
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Fri, 14 Aug 2015 19:59:21 +1000
+
 turnkey-openldap-13.0 (1) turnkey; urgency=low
 
   * Latest Debian Wheezy package version of OpenLDAP.
