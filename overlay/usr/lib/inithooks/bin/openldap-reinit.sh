@@ -92,6 +92,12 @@ EOL
 # configure Database Indices
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
 dn: olcDatabase={1}hdb,cn=config
+delete: olcDbIndex
+olcDbIndex: cn,uid eq
+-
+delete: olcDbIndex
+olcDbIndex: member,memberUid eq
+-
 add: olcDbIndex
 olcDbIndex: cn eq,pres,sub
 -
@@ -111,16 +117,13 @@ add: olcDbIndex
 olcDbIndex: mail,givenName eq,subinitial
 -
 add: olcDbIndex
-olcDbIndex: uidNumber eq
--
-add: olcDbIndex
-olcDbIndex: gidNumber eq
--
-add: olcDbIndex
 olcDbIndex: loginShell eq
 -
 add: olcDbIndex
 olcDbIndex: memberUid eq,pres,sub
+-
+add: olcDbIndex
+olcDbIndex: member eq,pres
 -
 add: olcDbIndex
 olcDbIndex: uniqueMember eq,pres
