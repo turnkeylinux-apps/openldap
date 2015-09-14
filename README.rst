@@ -36,5 +36,5 @@ Credentials *(passwords set at first boot)*
 
 
 .. _OpenLDAP: http://www.openldap.org/
-.. _TurnKey Core: http://www.turnkeylinux.org/core
-.. _OpenLDAP docs: http://www.turnkeylinux.org/docs/openldap
+.. _TurnKey Core: https://www.turnkeylinux.org/core
+.. _OpenLDAP docs: https://www.turnkeylinux.org/docs/openldap
