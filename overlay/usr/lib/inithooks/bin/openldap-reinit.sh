@@ -51,16 +51,16 @@ rm -rf /var/backups/slapd-
 rm -rf /var/backups/*.ldapdb
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure slapd
 
-# create Users/Groups OU's and default posixGroup
+# create Users/Groups OU's and users posixGroup
 ldapadd -x -D cn=admin,$LDAP_BASEDN -w $LDAP_PASS <<EOL
 dn: ou=Groups,$LDAP_BASEDN
 objectclass: organizationalUnit
 objectclass: top
 ou: Groups
 
-dn: cn=default,ou=Groups,$LDAP_BASEDN
-cn: default
-gidnumber: 500
+dn: cn=users,ou=Groups,$LDAP_BASEDN
+cn: users
+gidnumber: 100
 objectclass: posixGroup
 objectclass: top
 
@@ -68,6 +68,11 @@ dn: ou=Users,$LDAP_BASEDN
 objectclass: organizationalUnit
 objectclass: top
 ou: Users
+
+dn: ou=Aliases,$LDAP_BASEDN
+objectclass: organizationalUnit
+objectclass: top
+ou: Aliases
 EOL
 
 # configure TLS
