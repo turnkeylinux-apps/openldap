@@ -25,6 +25,7 @@ fi
 LDAP_DOMAIN=$1
 LDAP_PASS=$2
 LDAP_BASEDN="dc=`echo $LDAP_DOMAIN | sed 's/^\.//; s/\./,dc=/g'`"
+LDAP_PASS_RAND=`slappasswd -g`
 LDAP_PASS_HASH=`slappasswd -h {ssha} -s $LDAP_PASS`
 
 TLS=/etc/ldap/tls
@@ -73,6 +74,13 @@ dn: ou=Aliases,$LDAP_BASEDN
 objectclass: organizationalUnit
 objectclass: top
 ou: Aliases
+
+dn: cn=nsspam,$LDAP_BASEDN
+cn: nsspam
+objectclass: simpleSecurityObject
+objectclass: organizationalRole
+description: NSS/PAM Access Account
+userPassword: $LDAP_PASS_RAND
 EOL
 
 # configure TLS
@@ -145,6 +153,16 @@ ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
 dn: olcDatabase={0}config,cn=config
 replace: olcRootPW
 olcRootPW: $LDAP_PASS_HASH
+EOL
+
+# add nsspam user to access rules
+ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
+dn: olcDatabase={1}hdb,cn=config
+delete: olcAccess
+olcAccess: {0}
+-
+add: olcAccess
+olcAccess: {0}to attrs=userPassword,shadowLastChange by self write by anonymous auth by dn="cn=nsspam,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * none
 EOL
 
 # update phpldapadmin
