@@ -20,10 +20,14 @@ turnkey-openldap-14.2 (1) turnkey; urgency=low
 
     - Changes come from https://github.com/jstruebel/openldap-samba.git
 
+  * Added OpenSSH public key schema to ldap database
+
+    - Changes come from https://github.com/jstruebel/openldap-sshlpk.git
+
   * Note: Please refer to turnkey-core's changelog for changes common to all
     appliances. Here we only describe changes specific to this appliance.i
 
- -- Jonathan Struebel <jonathan.struebel@gmail.com>  Fri, 11 Mar 2016 12:07:21 -0700
+ -- Jonathan Struebel <jonathan.struebel@gmail.com>  Fri, 11 Mar 2016 14:37:40 -0700
 
 turnkey-openldap-14.1 (1) turnkey; urgency=low
 
