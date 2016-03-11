@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE template SYSTEM "../template.dtd">
+
+<template>
+<askcontainer>1</askcontainer>
+<description>New Simple Security Object</description>
+<icon>ldap-user.png</icon>
+<invalid>0</invalid>
+<rdn>cn</rdn>
+<!--<regexp>^ou=People,o=.*,</regexp>-->
+<title>TurnKey Linux: Simple Security Object</title>
+<visible>1</visible>
+
+<objectClasses>
+<objectClass id="organizationalRole"></objectClass>
+<objectClass id="simpleSecurityObject"></objectClass>
+</objectClasses>
+
+<attributes>
+<attribute id="cn">
+	<display>User Name</display>
+	<icon>ldap-uid.png</icon>
+	<order>1</order>
+	<page>1</page>
+	<spacer>1</spacer>
+</attribute>
+<attribute id="description">
+	<display>Description</display>
+	<order>1</order>
+	<page>1</page>
+	<spacer>1</spacer>
+</attribute>
+<attribute id="userPassword">
+	<display>Password</display>
+	<icon>lock.png</icon>
+	<value><![CDATA[=php.RandomPassword()]]></value>
+	<order>5</order>
+	<page>1</page>
+	<post>=php.PasswordEncrypt(%enc%;%userPassword%)</post>
+	<verify>0</verify>
+</attribute>
+</attributes>
+
+</template>

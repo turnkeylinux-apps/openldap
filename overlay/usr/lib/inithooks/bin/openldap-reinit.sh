@@ -170,6 +170,11 @@ CONF=/var/www/phpldapadmin/config/config.php
 sed -i "s|'base'.*|'base',array('cn=config','$LDAP_BASEDN'));|" $CONF
 sed -i "s|bind_id.*|bind_id','cn=admin,$LDAP_BASEDN');|" $CONF
 
+sed -i "s|search_base.*|search_base','ou=Users,$LDAP_BASEDN');|" $CONF
+
+CONF=/var/www/phpldapadmin/templates/creation/tkl-shadowAccount.xml
+sed -i "s|@example.com|@$LDAP_DOMAIN|" $CONF
+
 # update ldapscripts
 CONF=/etc/ldapscripts/ldapscripts.conf
 sed -i "s|^BINDDN.*|BINDDN=\"cn=admin,$LDAP_BASEDN\"|" $CONF

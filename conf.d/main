@@ -11,12 +11,20 @@ tar -zxf $SRC/master.tar.gz -C $(dirname $WEBROOT)
 rm $SRC/master.tar.gz
 mv $(dirname $WEBROOT)/phpLDAPadmin-* $WEBROOT
 
+# copy custom templates into phpldapadmin directory
+#  since overlay is applied before phpldapadmin gets unpacked the templates
+#  are placed in a different directory and moved into place here
+mv $(dirname $WEBROOT)/pla-templates/creation/* $WEBROOT/templates/creation
+rm -r $(dirname $WEBROOT)/pla-templates
+
 # phpldapadmin: create base configuration
 cat >$WEBROOT/config/config.php<<EOF
 <?php
 // phpLDAPadmin configuration
 
 \$config->custom->appearance['hide_template_warning'] = true;
+// Uncomment the line below to only use the tkl custom templates
+//\$config->custom->appearance['custom_templates_only'] = true;
 
 \$servers = new Datastore();
 \$servers->newServer('ldap_pla');
@@ -24,6 +32,11 @@ cat >$WEBROOT/config/config.php<<EOF
 \$servers->setValue('server','base',array('cn=config',''));
 \$servers->setValue('server','hide_noaccess_base','true');
 \$servers->setValue('login','bind_id','');
+\$servers->setValue('custom','pages_prefix','tkl-');
+\$servers->setValue('auto_number','enable',true);
+\$servers->setValue('auto_number','mechanism','search');
+\$servers->setValue('auto_number','search_base','');
+\$servers->setValue('auto_number','min',array('uidNumber'=>2000,'gidNumber'=>2000));
 ?>
 EOF
 
