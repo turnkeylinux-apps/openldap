@@ -70,6 +70,23 @@ objectclass: organizationalUnit
 objectclass: top
 ou: Users
 
+dn: ou=Hosts,$LDAP_BASEDN
+objectclass: organizationalUnit
+objectclass: top
+ou: Hosts
+
+dn: ou=Idmaps,$LDAP_BASEDN
+objectclass: organizationalUnit
+objectclass: top
+ou: Idmaps
+
+dn: cn=samba,$LDAP_BASEDN
+cn: samba
+objectclass: simpleSecurityObject
+objectclass: organizationalRole
+description: SAMBA Access Account
+userPassword: $LDAP_PASS_RAND
+
 dn: ou=Aliases,$LDAP_BASEDN
 objectclass: organizationalUnit
 objectclass: top
@@ -155,6 +172,9 @@ replace: olcRootPW
 olcRootPW: $LDAP_PASS_HASH
 EOL
 
+# add samba schema
+ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/samba.ldif
+
 # add nsspam user to access rules
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
 dn: olcDatabase={1}hdb,cn=config
@@ -162,7 +182,54 @@ delete: olcAccess
 olcAccess: {0}
 -
 add: olcAccess
-olcAccess: {0}to attrs=userPassword,shadowLastChange by self write by anonymous auth by dn="cn=nsspam,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * none
+olcAccess: {0}to attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword by self write by anonymous auth by dn="cn=nsspam,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * none
+EOL
+
+# add samba specific indices
+ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
+dn: olcDatabase={1}hdb,cn=config
+add: olcDbIndex
+olcDbIndex: sambaSID eq
+-
+add: olcDbIndex
+olcDbIndex: sambaPrimaryGroupSID eq
+-
+add: olcDbIndex
+olcDbIndex: sambaGroupType eq
+-
+add: olcDbIndex
+olcDbIndex: sambaSIDList eq
+-
+add: olcDbIndex
+olcDbIndex: sambaDomainName eq
+EOL
+
+# add samba specific access rules
+ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
+dn: olcDatabase={1}hdb,cn=config
+add: olcAccess
+olcAccess: {0}to dn.base="$LDAP_BASEDN" attrs=children by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * read
+-
+add: olcAccess
+olcAccess: {0}to filter=(objectClass=sambaDomain) by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * read
+-
+add: olcAccess
+olcAccess: {0}to dn.children="ou=Users,$LDAP_BASEDN" by self write by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=nsspam,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * read
+-
+add: olcAccess
+olcAccess: {0}to dn.children="ou=Users,$LDAP_BASEDN" attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword by self write by anonymous auth by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=nsspam,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * none
+-
+add: olcAccess
+olcAccess: {0}to dn.subtree="ou=Hosts,$LDAP_BASEDN" by self write by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * read
+-
+add: olcAccess
+olcAccess: {0}to dn.children="ou=Hosts,$LDAP_BASEDN" attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword by self write by anonymous auth by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * none
+-
+add: olcAccess
+olcAccess: {0}to dn.subtree="ou=Idmaps,$LDAP_BASEDN" by self write by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * read
+-
+add: olcAccess
+olcAccess: {0}to dn.children="ou=Idmaps,$LDAP_BASEDN" attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword by self write by anonymous auth by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * none
 EOL
 
 # update phpldapadmin
@@ -173,6 +240,9 @@ sed -i "s|bind_id.*|bind_id','cn=admin,$LDAP_BASEDN');|" $CONF
 sed -i "s|search_base.*|search_base','ou=Users,$LDAP_BASEDN');|" $CONF
 
 CONF=/var/www/phpldapadmin/templates/creation/tkl-shadowAccount.xml
+sed -i "s|@example.com|@$LDAP_DOMAIN|" $CONF
+
+CONF=/var/www/phpldapadmin/templates/creation/tkl-sambaSamAccount.xml
 sed -i "s|@example.com|@$LDAP_DOMAIN|" $CONF
 
 # update ldapscripts
