@@ -1,3 +1,34 @@
+turnkey-openldap-14.2 (1) turnkey; urgency=low
+
+  * Added nsspam account with access to authenticate and change users in order
+    to support using LDAP as authentication from NSS/PAM
+
+    - Changes come from https://github.com/jstruebel/openldap-nsspam.git
+
+  * Changed the default group populated in the database to support using it
+    as the auth backend for NSS/PAM from other TKL appliances
+
+    - Changes come from https://github.com/jstruebel/openldap-nsspam.git
+
+  * Added custom templates to phpLDAPAdmin to support user/group management
+    for the NSS/PAM changes above
+
+    - Changes come from https://github.com/jstruebel/openldap-pla.git
+
+  * Added Samba schema to ldap database and corresponding custom templates
+    to phpLDAPAdmin
+
+    - Changes come from https://github.com/jstruebel/openldap-samba.git
+
+  * Added OpenSSH public key schema to ldap database
+
+    - Changes come from https://github.com/jstruebel/openldap-sshlpk.git
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.i
+
+ -- Jonathan Struebel <jonathan.struebel@gmail.com>  Fri, 11 Mar 2016 14:37:40 -0700
+
 turnkey-openldap-14.1 (1) turnkey; urgency=low
 
   * Fix LigHTTPd bug in 15regen-sllcert (#512).
