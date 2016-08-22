@@ -178,6 +178,9 @@ ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/samba.ldif
 # add openssh public key schema
 ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/openssh-ldap.ldif
 
+# add pam_ldap name service additional schema
+ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/ldapns.ldif
+
 # add nsspam user to access rules
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
 dn: olcDatabase={1}hdb,cn=config
