@@ -1,5 +1,7 @@
 turnkey-openldap-14.2 (1) turnkey; urgency=low
 
+  * Installed security updates
+
   * Added nsspam account with access to authenticate and change users in order
     to support using LDAP as authentication from NSS/PAM
 
@@ -27,7 +29,7 @@ turnkey-openldap-14.2 (1) turnkey; urgency=low
   * Note: Please refer to turnkey-core's changelog for changes common to all
     appliances. Here we only describe changes specific to this appliance.i
 
- -- Jonathan Struebel <jonathan.struebel@gmail.com>  Fri, 11 Mar 2016 14:37:40 -0700
+ -- Jonathan Struebel <jonathan.struebel@gmail.com>  Tue, 02 May 2017 14:37:40 -0700
 
 turnkey-openldap-14.1 (1) turnkey; urgency=low
 
