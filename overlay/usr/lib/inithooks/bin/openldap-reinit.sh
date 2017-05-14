@@ -176,7 +176,7 @@ EOL
 ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/samba.ldif
 
 # add openssh public key schema
-ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/openssh-ldap.ldif
+ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/openssh-lpk.ldif
 
 # add pam_ldap name service additional schema
 ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/ldapns.ldif
