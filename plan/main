@@ -1,12 +1,13 @@
 #include <turnkey/base>
 
+samba
 slapd
 ldap-utils
 ldapscripts
 gnutls-bin
 
 lighttpd
-php5-cgi
-php5-ldap
-
-samba-doc
+php-cgi
+php-ldap
+php-xml
+mysql-server
