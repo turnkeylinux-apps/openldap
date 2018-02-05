@@ -49,8 +49,8 @@ lighty-disable-mod ssl
 lighty-enable-mod phpldapadmin
 
 # copy the samba schema to the ldap config directory
-zcat /usr/share/doc/samba-doc/examples/LDAP/samba.schema.gz > /etc/ldap/schema/samba.schema
-zcat /usr/share/doc/samba-doc/examples/LDAP/samba.ldif.gz > /etc/ldap/schema/samba.ldif
+zcat /usr/share/doc/samba/examples/LDAP/samba.schema.gz > /etc/ldap/schema/samba.schema
+zcat /usr/share/doc/samba/examples/LDAP/samba.ldif.gz > /etc/ldap/schema/samba.ldif
 
 # ldapscripts: enable params to be configured in inithook
 CONF=/etc/ldapscripts/ldapscripts.conf
@@ -64,9 +64,15 @@ sed -i "s|^#USUFFIX|USUFFIX|" $CONF
 CONF=/etc/default/slapd
 sed -i "s|^SLAPD_SERVICES.*|SLAPD_SERVICES=\"ldap:/// ldapi:/// ldaps:///\"|" $CONF
 
+service mysql start
+service slapd start
+
 # generate TLS certs and re-initialize ldap
 /usr/lib/inithooks/firstboot.d/20regen-openldap-secrets
 /usr/lib/inithooks/bin/openldap.py --domain=$LDAP_DOMAIN --pass=$LDAP_PASS
+
+service mysql stop
+service slapd stop
 
 # remove backup from re-initialization
 rm -rf /var/backups/slapd-

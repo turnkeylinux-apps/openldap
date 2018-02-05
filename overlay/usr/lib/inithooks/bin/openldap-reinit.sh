@@ -52,6 +52,8 @@ rm -rf /var/backups/slapd-
 rm -rf /var/backups/*.ldapdb
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure slapd
 
+service slapd restart
+
 # create Users/Groups OU's and users posixGroup
 ldapadd -x -D cn=admin,$LDAP_BASEDN -w $LDAP_PASS <<EOL
 dn: ou=Groups,$LDAP_BASEDN
@@ -262,8 +264,8 @@ chmod 640 $CONF
 
 # restart slapd if it was running, or stop it
 if [ "$SLAPD_RUNNING" == "0" ]; then
-    /etc/init.d/slapd restart
+    service slapd restart
 else
-    /etc/init.d/slapd stop
+    service slapd stop
 fi
 
