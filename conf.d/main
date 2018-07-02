@@ -74,6 +74,9 @@ service slapd start
 service mysql stop
 service slapd stop
 
+# remove samba pkg (only required for samba schema)
+apt purge -y samba
+
 # remove backup from re-initialization
 rm -rf /var/backups/slapd-
 rm -rf /var/backups/*.ldapdb
