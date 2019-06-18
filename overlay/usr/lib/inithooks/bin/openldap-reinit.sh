@@ -54,6 +54,9 @@ DEBIAN_FRONTEND=noninteractive dpkg-reconfigure slapd
 
 service slapd restart
 
+# give slapd a second to get ready
+sleep 1
+
 # create Users/Groups OU's and users posixGroup
 ldapadd -x -D cn=admin,$LDAP_BASEDN -w $LDAP_PASS <<EOL
 dn: ou=Groups,$LDAP_BASEDN
