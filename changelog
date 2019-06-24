@@ -1,3 +1,11 @@
+turnkey-openldap-15.1 (1) turnkey; urgency=low
+
+  * Include a sleep in the OpenLDAP inithook which resolves intermittant
+    initialisation issues, including a TLS/SSL issue. Closes #1176 & #1337.
+    [ Stefan Davis ]
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Mon, 24 Jun 2019 15:22:34 +1000
+
 turnkey-openldap-15.0 (1) turnkey; urgency=low
 
   * Includes PHP7.0 (installed from Debian repos)
