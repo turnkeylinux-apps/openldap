@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """Set OpenLDAP domain and admin password (will reinitialize LDAP)
 
 Option:
@@ -11,25 +11,27 @@ Option:
 import os
 import sys
 import getopt
-import inithooks_cache
+import subprocess
 
+import inithooks_cache
 from dialog_wrapper import Dialog
-from executil import system
+
+DEFAULT_DOMAIN = "example.com"
+
 
 def usage(s=None):
     if s:
-        print >> sys.stderr, "Error:", s
-    print >> sys.stderr, "Syntax: %s [options]" % sys.argv[0]
-    print >> sys.stderr, __doc__
+        print("Error:", s, file=sys.stderr)
+    print("Syntax: %s [options]" % sys.argv[0], file=sys.stderr)
+    print(__doc__, file=sys.stderr)
     sys.exit(1)
 
-DEFAULT_DOMAIN="example.com"
 
 def main():
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h",
                                        ['help', 'pass=', 'domain='])
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         usage(e)
 
     domain = ""
@@ -63,8 +65,8 @@ def main():
     inithooks_cache.write('APP_DOMAIN', domain)
 
     script = os.path.join(os.path.dirname(__file__), 'openldap-reinit.sh')
-    system(script, domain, password)
+    subprocess.check_output([script, domain, password])
+
 
 if __name__ == "__main__":
     main()
-

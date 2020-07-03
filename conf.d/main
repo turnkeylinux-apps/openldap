@@ -22,6 +22,8 @@ cat >$WEBROOT/config/config.php<<EOF
 <?php
 // phpLDAPadmin configuration
 
+\$config->custom->jpeg['tmpdir'] = '/tmp';
+\$config->custom->session['blowfish'] = '$(mcookie)$(mcookie)';
 \$config->custom->appearance['hide_template_warning'] = true;
 // Uncomment the line below to only use the tkl custom templates
 //\$config->custom->appearance['custom_templates_only'] = true;
@@ -32,6 +34,8 @@ cat >$WEBROOT/config/config.php<<EOF
 \$servers->setValue('server','base',array('cn=config',''));
 \$servers->setValue('server','hide_noaccess_base','true');
 \$servers->setValue('login','bind_id','');
+// Set to true to allow anonymous bind login.
+\$servers->setValue('login','anon_bind',false);
 \$servers->setValue('custom','pages_prefix','tkl-');
 \$servers->setValue('auto_number','enable',true);
 \$servers->setValue('auto_number','mechanism','search');
@@ -64,14 +68,12 @@ sed -i "s|^#USUFFIX|USUFFIX|" $CONF
 CONF=/etc/default/slapd
 sed -i "s|^SLAPD_SERVICES.*|SLAPD_SERVICES=\"ldap:/// ldapi:/// ldaps:///\"|" $CONF
 
-service mysql start
 service slapd start
 
 # generate TLS certs and re-initialize ldap
 /usr/lib/inithooks/firstboot.d/20regen-openldap-secrets
 /usr/lib/inithooks/bin/openldap.py --domain=$LDAP_DOMAIN --pass=$LDAP_PASS
 
-service mysql stop
 service slapd stop
 
 # remove samba pkg (only required for samba schema)
