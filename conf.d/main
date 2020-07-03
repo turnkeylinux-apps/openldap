@@ -23,7 +23,7 @@ cat >$WEBROOT/config/config.php<<EOF
 // phpLDAPadmin configuration
 
 \$config->custom->jpeg['tmpdir'] = '/tmp';
-\$config->custom->session['blowfish'] = '$(mcookie)$(mcookie)'
+\$config->custom->session['blowfish'] = '$(mcookie)$(mcookie)';
 \$config->custom->appearance['hide_template_warning'] = true;
 // Uncomment the line below to only use the tkl custom templates
 //\$config->custom->appearance['custom_templates_only'] = true;
