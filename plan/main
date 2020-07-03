@@ -10,4 +10,3 @@ lighttpd
 php-cgi
 php-ldap
 php-xml
-mysql-server
