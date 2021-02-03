@@ -10,3 +10,6 @@ lighttpd
 php-cgi
 php-ldap
 php-xml
+
+libnet-ldap-perl    /* Webmin LDAP dependency */
+webmin-ldap-server
