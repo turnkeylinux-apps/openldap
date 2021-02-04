@@ -1,0 +1,119 @@
+#!/bin/bash -e
+
+usage() {
+    exit_code=0
+    if [[ $# -gt 0 ]]; then
+        echo "ERORR: $@" >&2
+        echo
+        exit_code=1
+    fi
+    cat <<EOF
+Usage: $(basename $0) fqdn|ip [-f|--force]
+
+    (Re)generate SSL/TLS certificates and keys as well as a self-signed
+    certificate authority for use with OpenLDAP.
+
+    Note that whatever you use as the FQDN or IP, that will be the "hostname"
+    that the certificate will use. Assuming that your client checks the
+    certificate validity, then you will need to use the same "hostname" within
+    your connection URI.
+
+    I.e. if you use this tool with the FQDN of my.domain.com; then the URI of
+    your connection string must be::
+
+        ldaps://my.domain.com
+
+    If you try to connect via IP, a secure connection will fail (due to a
+    hostname mismatch between the URI and the certificate).
+
+    Success will be noted by exit with a zero exit code. Exit code 1 signifies
+    a failure and should be accompaied with a message.
+
+Arguments::
+
+    fqdn        Server FQDN (fully qualified domain name). This is the full
+                domain name of your OpenLDAP server. You should set up DNS (or
+                some other tool to ensure that your server is accessable via
+                this domain).
+    ip          Server IP address. This must be the IP address that your server
+                is accessable via.
+
+                NOTE: For this to work, the fqdn/ip MUST resolve to your
+                      OpenLDAP server from the desired client.
+
+Options::
+
+    -f|--force  Force overwrite of existing certs. Without this, if any of the
+                cert or key files already exist, this tool will fail.
+    -h|--help   Show this usage info and quit.
+
+EOF
+    exit $exit_code
+}
+
+TLS=/etc/ldap/tls
+TLS_CA_KEY=$TLS/ca_key.pem
+TLS_CA_CRT=$TLS/ca_cert.pem
+TLS_CA_TPL=$TLS/ca.info
+
+TLS_LDAP_KEY=$TLS/openldap_key.pem
+TLS_LDAP_CRT=$TLS/openldap_crt.pem
+TLS_LDAP_TPL=$TLS/openldap.info
+
+cert_files="$TLS_CA_KEY $TLS_CA_CRT $TLS_LDAP_KEY $TLS_LDAP_CRT"
+
+unset check force host quiet
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            usage;;
+        -f|--force)
+            force=y
+            shift;;
+        -q|--quiet)
+            quiet=y
+            shift;;
+        -*)
+            usage "Unknown switch $1";;
+        *)
+            if [[ -n "$check" ]]; then
+                usage "Only one FQDN or IP can be given"
+            else
+                host=$1
+                check=y
+            fi
+            shift;;
+    esac
+done
+[[ -n "$host" ]] || usage "Must provide FQDN or IP."
+
+if [[ -n "$force" ]]; then
+    unset found_files
+    for cert_file in $cert_files; do
+        if [[ ! -f "$cert_file" ]]; then
+            found_files="$found_files $cert_file"
+        fi
+    done
+    if [[ -n "$found_files" ]]; then
+        usage "Files already exist (files: $found_files)."
+    fi
+else
+    rm -rf $cert_files
+fi
+
+sed -i "\|^cn|s|=.*|= $host|" $TLS_LDAP_TPL
+
+certtool --generate-privkey > $TLS_CA_KEY 2>/dev/null
+certtool --generate-self-signed \
+    --load-privkey $TLS_CA_KEY --template $TLS_CA_TPL --outfile $TLS_CA_CRT \
+    >/dev/null 2>&1
+
+certtool --generate-privkey > $TLS_LDAP_KEY 2>/dev/null
+certtool --generate-certificate \
+    --load-privkey $TLS_LDAP_KEY --load-ca-certificate $TLS_CA_CRT \
+    --load-ca-privkey $TLS_CA_KEY --template $TLS_LDAP_TPL --outfile $TLS_LDAP_CRT \
+    >/dev/null 2>&1
+
+chown -R openldap:openldap $TLS
+chmod 640 $cert_files
+systemctl restart slapd
