@@ -1,5 +1,8 @@
 turnkey-openldap-16.1 (1) turnkey; urgency=low
 
+  * Support running OpenLDAP appliance running as ununprivileged on LXC -
+    closes #1535.
+
   * Use MDB backend. Previously we were using deprecated HDB backend.
 
   * Install latest upstream release of phpLDAPadmin from GitHub - v1.2.6.2. We
@@ -11,7 +14,7 @@ turnkey-openldap-16.1 (1) turnkey; urgency=low
   * Note: Please refer to turnkey-core's 16.1 changelog for changes common to
     all appliances. Here we only describe changes specific to this appliance.
 
- -- Jeremy Davis <jeremy@turnkeylinux.org>  Thu, 04 Feb 2021 14:46:11 +1100
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Tue, 23 Feb 2021 16:02:38 +1100
 
 turnkey-openldap-16.0 (1) turnkey; urgency=low
 
