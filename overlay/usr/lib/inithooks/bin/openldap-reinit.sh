@@ -37,7 +37,7 @@ SLAPD_RUNNING=$(/etc/init.d/slapd status > /dev/null; echo $?)
 
 # re-configure ldap
 debconf-set-selections << EOF
-slapd slapd/backend string HDB
+slapd slapd/backend string MDB
 slapd slapd/allow_ldap_v2 boolean false
 slapd slapd/no_configuration boolean false
 slapd slapd/move_old_database boolean true
@@ -126,7 +126,7 @@ EOL
 
 # configure Database Indices
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
-dn: olcDatabase={1}hdb,cn=config
+dn: olcDatabase={1}mdb,cn=config
 delete: olcDbIndex
 olcDbIndex: cn,uid eq
 -
@@ -188,7 +188,7 @@ ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/ldapns.ldif
 
 # add nsspam user to access rules
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
-dn: olcDatabase={1}hdb,cn=config
+dn: olcDatabase={1}mdb,cn=config
 delete: olcAccess
 olcAccess: {0}
 -
@@ -198,7 +198,7 @@ EOL
 
 # add samba specific indices
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
-dn: olcDatabase={1}hdb,cn=config
+dn: olcDatabase={1}mdb,cn=config
 add: olcDbIndex
 olcDbIndex: sambaSID eq
 -
@@ -217,7 +217,7 @@ EOL
 
 # add samba specific access rules
 ldapmodify -Y EXTERNAL -H ldapi:/// <<EOL
-dn: olcDatabase={1}hdb,cn=config
+dn: olcDatabase={1}mdb,cn=config
 add: olcAccess
 olcAccess: {0}to dn.base="$LDAP_BASEDN" attrs=children by dn="cn=samba,$LDAP_BASEDN" write by dn="cn=admin,$LDAP_BASEDN" write by * read
 -

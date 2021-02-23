@@ -16,7 +16,9 @@ and on top of that:
      ldap-utils packages)
    - Set LDAP domain and admin password on firstboot (convenience,
      security).
-   - TLS support for ldaps out of the box (security).
+   - TLS support for ldaps out of the box (security). Note, you can
+     find the pre-generated CA certificate as /etc/ldap/tls/ca_cert.pem
+     and/or regenerate one with the 'turnkey-regen-ldap-certs' command.
    - Includes Users/Groups OU and default PosixGroup (convenience).
 
 - Includes phpLDAPadmin for web based LDAP administration, with SSL
