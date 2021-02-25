@@ -27,7 +27,7 @@ Usage: $(basename $0) fqdn|ip [-f|--force]
     hostname mismatch between the URI and the certificate).
 
     Success will be noted by exit with a zero exit code. Exit code 1 signifies
-    a failure and should be accompaied with a message.
+    a failure and should be accompanied with a message.
 
 Arguments::
 
