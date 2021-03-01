@@ -9,4 +9,6 @@ USER_REPO="leenooks/phpLDAPadmin"
 VERSION=$(gh_releases ${USER_REPO} | sort -V | tail -1)
 URL="https://github.com/${USER_REPO}/archive/${VERSION}.tar.gz"
 
-dl $URL /usr/local/src
+SRC=/usr/local/src
+dl $URL $SRC
+mv $SRC/$VERSION.tar.gz $SRC/phpldapadmin.tar.gz

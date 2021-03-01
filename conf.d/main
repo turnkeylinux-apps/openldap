@@ -7,8 +7,8 @@ SRC=/usr/local/src
 WEBROOT=/var/www/phpldapadmin
 
 # phpldapadmin: unpack
-tar -zxf $SRC/master.tar.gz -C $(dirname $WEBROOT)
-rm $SRC/master.tar.gz
+tar -zxf $SRC/phpldapadmin.tar.gz -C $(dirname $WEBROOT)
+rm $SRC/phpldapadmin.tar.gz
 mv $(dirname $WEBROOT)/phpLDAPadmin-* $WEBROOT
 
 # copy custom templates into phpldapadmin directory
@@ -71,7 +71,7 @@ sed -i "s|^SLAPD_SERVICES.*|SLAPD_SERVICES=\"ldap:/// ldapi:/// ldaps:///\"|" $C
 service slapd start
 
 # generate TLS certs and re-initialize ldap
-/usr/lib/inithooks/firstboot.d/20regen-openldap-secrets
+turnkey-regen-ldap-certs $LDAP_DOMAIN
 /usr/lib/inithooks/bin/openldap.py --domain=$LDAP_DOMAIN --pass=$LDAP_PASS
 
 service slapd stop
