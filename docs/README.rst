@@ -5,7 +5,7 @@ With `Turnkey OpenLDAP`_ , active directory tasks are easier than ever.
 OpenLDAP is an open source implementation of the Lightweight Directory Access Protocol (LDAP) developed by the `OpenLDAP` Project, a collaborative effort to develop 
 a robust, commercial-grade, fully featured, and open source LDAP suite of applications 
 and development tools.
------------------
+
 
  "Simple things should be simple. Hard things should be possible."
 
@@ -39,8 +39,9 @@ enough so anyone that wants to can jump in and make cool stuff happen.
 
 Update
 -------------------------------------------
-The latest version 17.0 update addreses samba schema archives changing to plain text files. Version 17.0 also addresses LigHTTPd config error due to changes made in common for v17 udpate.
-Lastly, the update refactors python inithooks overlay to be comopatible with v17.x.
+- The latest version 17.0 update addreses samba schema archives changing to plain text files.
+- Version 17.0 also addresses LigHTTPd configuration error due to changes made in common for v17 udpate.
+- Lastly, the update refactors python inithooks overlay to be comopatible with v17.x.
 
 .. _OpenLDAP: https://www.openldap.org/
 .. _Turnkey Core: https://www.turnkeylinux.org/core
