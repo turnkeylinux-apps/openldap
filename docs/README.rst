@@ -33,7 +33,7 @@ More advanced Linux users may be able to fast forward through most of it and lea
 TurnKey library: https://github.com/turnkeylinux-apps/openldap
 
 If you find yourself confused, take a step back and read through the
-rest of the `documentation_` first to get an overview of how things works,
+rest of the `documentation`_ first to get an overview of how things works,
 learn more about development best `practices`, etc. We've made this easy
 enough so anyone that wants to can jump in and make cool stuff happen.
 
