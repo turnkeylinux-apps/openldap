@@ -53,8 +53,8 @@ lighty-disable-mod ssl
 lighty-enable-mod phpldapadmin
 
 # copy the samba schema to the ldap config directory
-zcat /usr/share/doc/samba/examples/LDAP/samba.schema.gz > /etc/ldap/schema/samba.schema
-zcat /usr/share/doc/samba/examples/LDAP/samba.ldif.gz > /etc/ldap/schema/samba.ldif
+mv /usr/share/doc/samba/examples/LDAP/samba.schema /etc/ldap/schema/
+mv /usr/share/doc/samba/examples/LDAP/samba.ldif /etc/ldap/schema/
 
 # ldapscripts: enable params to be configured in inithook
 CONF=/etc/ldapscripts/ldapscripts.conf
