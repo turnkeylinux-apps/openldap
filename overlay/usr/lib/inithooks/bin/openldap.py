@@ -13,8 +13,8 @@ import sys
 import getopt
 import subprocess
 
-import inithooks_cache
-from dialog_wrapper import Dialog
+from libinithooks import inithooks_cache
+from libinithooks.dialog_wrapper import Dialog
 
 DEFAULT_DOMAIN = "example.com"
 

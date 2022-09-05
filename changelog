@@ -1,3 +1,16 @@
+turnkey-openldap-17.0 (1) turnkey; urgency=low
+
+  * Update addresess samba schema archives changing to plain text files.
+
+  * Addresses LigHTTPd config error due to changes made in common directory.
+
+  * Refactors python inithooks overlay to be comopatible with v17.x
+
+  * Note: Please refer to turnkey-core's 17.0 changelog for changes common to
+    all appliances. Here we only describe changes specific to this appliance.
+
+ -- Mattie Darden <mattie@turnkeylinux.org>  Wed, 24 Aug 2022 19:16:38 +0400
+
 turnkey-openldap-16.1 (1) turnkey; urgency=low
 
   * Support running OpenLDAP appliance running as ununprivileged on LXC -
