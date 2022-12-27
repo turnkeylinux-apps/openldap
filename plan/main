@@ -8,7 +8,6 @@ gnutls-bin
 
 lighttpd
 lighttpd-mod-openssl
-php-cgi
 php-ldap
 php-xml
 php-fpm
