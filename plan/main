@@ -7,9 +7,10 @@ ldapscripts
 gnutls-bin
 
 lighttpd
-php-cgi
+lighttpd-mod-openssl
 php-ldap
 php-xml
+php-fpm
 
 libnet-ldap-perl    /* Webmin LDAP dependency */
 webmin-ldap-server
