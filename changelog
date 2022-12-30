@@ -1,15 +1,22 @@
 turnkey-openldap-17.0 (1) turnkey; urgency=low
 
+  * Install new lighttpd-mod-openssl package and tweak Lighty config to enable
+    it. (LigHTTPd now supports both GNUTLS and OpenSSL, so the appropriate
+    package now needs to be separately installed and explictly enabled).
+
   * Update addresess samba schema archives changing to plain text files.
+    [ Mattie Darden <mattie@turnkeylinux.org> ]
 
   * Addresses LigHTTPd config error due to changes made in common directory.
+    [ Mattie Darden <mattie@turnkeylinux.org> ]
 
-  * Refactors python inithooks overlay to be comopatible with v17.x
+  * Refactor python inithooks overlay to be comopatible with v17.x
+    [ Mattie Darden <mattie@turnkeylinux.org> ]
 
   * Note: Please refer to turnkey-core's 17.0 changelog for changes common to
     all appliances. Here we only describe changes specific to this appliance.
 
- -- Mattie Darden <mattie@turnkeylinux.org>  Wed, 24 Aug 2022 19:16:38 +0400
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Fri, 30 Dec 2022 02:19:31 +0000
 
 turnkey-openldap-16.1 (1) turnkey; urgency=low
 
