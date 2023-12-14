@@ -116,4 +116,26 @@ certtool --generate-certificate \
 
 chown -R openldap:openldap $TLS
 chmod 640 $cert_files
-systemctl restart slapd
+if systemd-detect-virt -c 2>&1>/dev/null; then
+    # workaround for systemctl stop not working for slapd on container builds
+    echo "WARN: using workaround for stopping slapd on container ..."
+    pid=$(pgrep slapd)
+    systemctl stop slapd
+    sleep 5
+    if ps -p $pid >/dev/null; then
+        kill $pid
+    fi
+    for _ in {0..10}; do
+        if ! ps -p $pid >/dev/null; then
+            break
+        fi
+        sleep 1
+    done
+    if ps -p $pid >/dev/null; then
+        echo "ERROR: failed to stop slapd manually"
+        exit 1
+    fi
+    systemctl start slapd
+else
+    systemctl restart slapd
+fi
