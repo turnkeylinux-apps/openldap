@@ -4,7 +4,6 @@ LDAP_PASS=turnkey
 LDAP_DOMAIN=example.com
 
 SRC=/usr/local/src
-WEBROOT=/var/www/phpldapadmin
 
 # phpldapadmin: create base configuration
 cat >/etc/phpldapadmin/config.php<<EOF
