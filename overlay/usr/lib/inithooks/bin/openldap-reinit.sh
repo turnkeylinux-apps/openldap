@@ -18,15 +18,51 @@ EOF
     exit 1
 }
 
+stop_slapd() {
+    if systemd-detect-virt -c 2>&1>/dev/null; then
+        # workaround for systemctl stop not working for slapd on container builds
+        echo "WARN: using workaround for stopping slapd on container ..."
+        pid=$(pgrep slapd)
+        sleep 5
+        if [[ -n "$pid" ]] && ps -p $pid >/dev/null; then
+            kill $pid
+        else
+            return
+        fi
+        for _ in {0..10}; do
+            if ! ps -p $pid >/dev/null; then
+                break
+            fi
+            sleep 1
+        done
+        if ps -p $pid >/dev/null; then
+            echo "ERROR: failed to stop slapd manually"
+            exit 1
+        fi
+    else
+        systemctl stop slapd
+    fi
+}
+
+restart_slapd() {
+    if systemd-detect-virt -c 2>&1>/dev/null; then
+        # workaround for systemctl stop not working for slapd on container builds
+        stop_slapd
+        systemctl start slapd
+    else
+        systemctl restart slapd
+    fi
+}
+
 if [[ "$#" != "2" ]]; then
     usage
 fi
 
 LDAP_DOMAIN=$1
 LDAP_PASS=$2
-LDAP_BASEDN="dc=`echo $LDAP_DOMAIN | sed 's/^\.//; s/\./,dc=/g'`"
-LDAP_PASS_RAND=`slappasswd -g`
-LDAP_PASS_HASH=`slappasswd -h {ssha} -s $LDAP_PASS`
+LDAP_BASEDN="dc=$(echo "$LDAP_DOMAIN" | sed 's/^\.//; s/\./,dc=/g')"
+LDAP_PASS_RAND="$(slappasswd -g)"
+LDAP_PASS_HASH="$(slappasswd -h {ssha} -s "$LDAP_PASS")"
 
 TLS=/etc/ldap/tls
 TLS_CA_CRT=$TLS/ca_cert.pem
@@ -50,9 +86,10 @@ EOF
 
 rm -rf /var/backups/slapd-
 rm -rf /var/backups/*.ldapdb
-DEBIAN_FRONTEND=noninteractive dpkg-reconfigure slapd
 
-service slapd restart
+stop_slapd
+DEBIAN_FRONTEND=noninteractive dpkg-reconfigure slapd
+restart_slapd
 
 # give slapd a second to get ready
 sleep 1
@@ -244,16 +281,16 @@ olcAccess: {0}to dn.children="ou=Idmaps,$LDAP_BASEDN" attrs=userPassword,shadowL
 EOL
 
 # update phpldapadmin
-CONF=/var/www/phpldapadmin/config/config.php
+CONF=/etc/phpldapadmin/config.php
 sed -i "s|'base'.*|'base',array('cn=config','$LDAP_BASEDN'));|" $CONF
 sed -i "s|bind_id.*|bind_id','cn=admin,$LDAP_BASEDN');|" $CONF
 
 sed -i "s|search_base.*|search_base','ou=Users,$LDAP_BASEDN');|" $CONF
 
-CONF=/var/www/phpldapadmin/templates/creation/tkl-shadowAccount.xml
+CONF=/etc/phpldapadmin/templates/creation/tkl-shadowAccount.xml
 sed -i "s|@example.com|@$LDAP_DOMAIN|" $CONF
 
-CONF=/var/www/phpldapadmin/templates/creation/tkl-sambaSamAccount.xml
+CONF=/etc/phpldapadmin/templates/creation/tkl-sambaSamAccount.xml
 sed -i "s|@example.com|@$LDAP_DOMAIN|" $CONF
 
 # update ldapscripts
@@ -265,10 +302,11 @@ CONF=/etc/ldapscripts/ldapscripts.passwd
 echo -n $LDAP_PASS > $CONF
 chmod 640 $CONF
 
+
 # restart slapd if it was running, or stop it
 if [ "$SLAPD_RUNNING" == "0" ]; then
-    service slapd restart
+    restart_slapd
 else
-    service slapd stop
+    stop_slapd
 fi
 
