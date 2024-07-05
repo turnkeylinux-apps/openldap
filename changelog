@@ -1,3 +1,28 @@
+turnkey-openldap-18.1 (1) turnkey; urgency=low
+
+  * v18.1 rebuild - includes latest Debian & TurnKey packages.
+
+  * Install missing libldap-common package. Fixes SSL/TLS connections.
+    Closes #1939 (see related Webmin fix below).
+
+  * Configuration console (confconsole) - v2.1.6:
+    - Bugfix broken DNS-01 Let's Encrypt challenge - closes #1876 & #1895.
+      Fixed in v2.1.5 - already included in some appliances.
+    - Let's Encrypt/Dehydrated - bugfix cron failure - closes #1962.
+    - General dehydrated-wrapper code cleanup - now passes shellcheck.
+
+  * Web management console (webmin):
+    - Updated default OpenLDAP module ldap.conf path - part of #1939.
+    - Replace webmin-shell with webmin-xterm module by default - closes #1904.
+
+  * Reduce log noise by creating ntpsec log dir - closes #1952.
+
+  * Includes new 'tkl-upgrade-php' helper script - to allow easy update/change
+    of PHP version - closes #1892.
+    [Marcos Méndez @ POPSOLUTIONS <https://github.com/marcos-mendez>]
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Fri, 05 Jul 2024 10:54:12 +0000
+
 turnkey-openldap-18.0 (1) turnkey; urgency=low
 
   * Debian default OpenLDAP (slapd) updated to v2.5.13.
