@@ -55,9 +55,16 @@ sed -i "s|^#USUFFIX|USUFFIX|" $CONF
 
 # enabled ldaps for TLS
 CONF=/etc/default/slapd
+CLIENT_CONF=/etc/ldap/ldap.conf
 sed -i "s|^SLAPD_SERVICES.*|SLAPD_SERVICES=\"ldap:/// ldapi:/// ldaps:///\"|" $CONF
 
 service slapd start
+
+# update local client ldap.conf to point to correct CA cert location
+sed -i "/^TLS_CACERT/ s|/etc.*|/etc/ldap/tls/ca_cert.pem|" $CLIENT_CONF
+
+# point Webmin LDAP-client module to correct conf
+sed -i "/^auth_ldap/ s|=.*|=$CLIENT_CONF|" /etc/webmin/ldap-client/config
 
 # generate TLS certs and re-initialize ldap
 turnkey-regen-ldap-certs $LDAP_DOMAIN
