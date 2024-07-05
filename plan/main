@@ -4,6 +4,7 @@ samba
 slapd
 ldap-utils
 ldapscripts
+libldap-common      /* is only recommends in Bookworm - closes #1939 */
 gnutls-bin
 
 lighttpd
