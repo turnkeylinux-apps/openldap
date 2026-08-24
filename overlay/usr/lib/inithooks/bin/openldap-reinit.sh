@@ -48,7 +48,7 @@ restart_slapd() {
     if systemd-detect-virt -c 2>&1>/dev/null; then
         # workaround for systemctl stop not working for slapd on container builds
         stop_slapd
-        systemctl start slapd
+        service slapd start
     else
         systemctl restart slapd
     fi
