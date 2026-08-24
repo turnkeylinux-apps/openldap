@@ -27,7 +27,7 @@ stop_slapd() {
         if [[ -n "$pid" ]] && ps -p $pid >/dev/null; then
             kill $pid
         else
-            return
+            return 0
         fi
         for _ in {0..10}; do
             if ! ps -p $pid >/dev/null; then
