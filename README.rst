@@ -12,31 +12,30 @@ and on top of that:
 
 - OpenLDAP configurations:
    
-   - Installed and maintained through package management system (slapd
-     ldap-utils packages)
-   - Set LDAP domain and admin password on firstboot (convenience,
-     security).
-   - TLS support for ldaps out of the box (security). Note, you can
-     find the pre-generated CA certificate as /etc/ldap/tls/ca_cert.pem
-     and/or regenerate one with the 'turnkey-regen-ldap-certs' command.
-   - Includes Users/Groups OU and default PosixGroup (convenience).
+   - OpenLDAP and its client utilities installed and maintained through
+     Debian's package management system.
+   - LDAP domain and administrator password configured at first boot.
+   - TLS support for LDAPS out of the box. The generated CA certificate is
+     available at ``/etc/ldap/tls/ca_cert.pem`` and certificates can be
+     regenerated with ``turnkey-regen-ldap-certs``.
+   - Users and Groups organizational units plus a default ``users`` POSIX
+     group.
 
-- Includes phpLDAPadmin for web based LDAP administration, with SSL
-  support out of the box.
-   
-   - Installed from upstream source code to /var/www/phpldapadmin
+- phpLDAPadmin installed from Debian and served over TLS for web-based LDAP
+  administration.
 
-- Webmin modules for configuring Apache2, PHP, MySQL and Postfix.
+- Webmin LDAP server module.
 
 See the `OpenLDAP docs`_ for further details.
 
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
--  Webmin, SSH, MySQL: username **root**
--  OpenLDAP: default domain **example.com**
+-  Webmin, SSH: username **root**
+-  OpenLDAP and phpLDAPadmin: administrator DN **cn=admin,dc=example,dc=com**
+   for the default domain **example.com**
 
 
-.. _OpenLDAP: http://www.openldap.org/
+.. _OpenLDAP: https://www.openldap.org/
 .. _TurnKey Core: https://www.turnkeylinux.org/core
 .. _OpenLDAP docs: https://www.turnkeylinux.org/docs/openldap
