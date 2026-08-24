@@ -154,9 +154,6 @@ olcTLSCertificateFile: $TLS_LDAP_CRT
 add: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: $TLS_LDAP_KEY
 -
-add: olcTLSCipherSuite
-olcTLSCipherSuite: normal
--
 add: olcTLSVerifyClient
 olcTLSVerifyClient: never
 EOL
