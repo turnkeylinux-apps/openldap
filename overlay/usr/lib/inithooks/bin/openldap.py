@@ -65,7 +65,7 @@ def main():
     inithooks_cache.write('APP_DOMAIN', domain)
 
     script = os.path.join(os.path.dirname(__file__), 'openldap-reinit.sh')
-    subprocess.check_output([script, domain, password])
+    subprocess.check_call([script, domain, password])
 
 
 if __name__ == "__main__":
