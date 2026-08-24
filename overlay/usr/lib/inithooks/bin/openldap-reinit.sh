@@ -22,7 +22,7 @@ stop_slapd() {
     if systemd-detect-virt -c 2>&1>/dev/null; then
         # workaround for systemctl stop not working for slapd on container builds
         echo "WARN: using workaround for stopping slapd on container ..."
-        pid=$(pgrep slapd)
+        pid=$(pgrep slapd || true)
         sleep 5
         if [[ -n "$pid" ]] && ps -p $pid >/dev/null; then
             kill $pid
@@ -309,4 +309,3 @@ if [ "$SLAPD_RUNNING" == "0" ]; then
 else
     stop_slapd
 fi
-
