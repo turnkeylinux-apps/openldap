@@ -22,12 +22,12 @@ stop_slapd() {
     if systemd-detect-virt -c 2>&1>/dev/null; then
         # workaround for systemctl stop not working for slapd on container builds
         echo "WARN: using workaround for stopping slapd on container ..."
-        pid=$(pgrep slapd)
+        pid=$(pgrep slapd || true)
         sleep 5
         if [[ -n "$pid" ]] && ps -p $pid >/dev/null; then
             kill $pid
         else
-            return
+            return 0
         fi
         for _ in {0..10}; do
             if ! ps -p $pid >/dev/null; then
@@ -48,7 +48,7 @@ restart_slapd() {
     if systemd-detect-virt -c 2>&1>/dev/null; then
         # workaround for systemctl stop not working for slapd on container builds
         stop_slapd
-        systemctl start slapd
+        service slapd start
     else
         systemctl restart slapd
     fi
@@ -153,9 +153,6 @@ olcTLSCertificateFile: $TLS_LDAP_CRT
 -
 add: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: $TLS_LDAP_KEY
--
-add: olcTLSCipherSuite
-olcTLSCipherSuite: normal
 -
 add: olcTLSVerifyClient
 olcTLSVerifyClient: never
@@ -309,4 +306,3 @@ if [ "$SLAPD_RUNNING" == "0" ]; then
 else
     stop_slapd
 fi
-

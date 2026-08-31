@@ -4,7 +4,7 @@ samba
 slapd
 ldap-utils
 ldapscripts
-libldap-common      /* is only recommends in Bookworm - closes #1939 */
+libldap-common      /* provides the TLS-aware LDAP client configuration */
 gnutls-bin
 
 lighttpd
