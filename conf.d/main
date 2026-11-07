@@ -69,6 +69,23 @@ sed -i 's/^ldap_user=.*/ldap_user=openldap/' /etc/webmin/ldap-server/config
 turnkey-regen-ldap-certs $LDAP_DOMAIN
 /usr/lib/inithooks/bin/openldap.py --domain=$LDAP_DOMAIN --pass=$LDAP_PASS
 
+# The build password is only for seeding schemas and integration settings.
+# Firstboot replaces the directory, so ship an empty DIT with no password
+# authentication, including no entry password that could match a root DN.
+LDAP_BASEDN="dc=$(printf '%s' "$LDAP_DOMAIN" | sed 's/\./,dc=/g')"
+ldapdelete -r -x -H ldap://127.0.0.1 \
+    -D "cn=admin,$LDAP_BASEDN" -w "$LDAP_PASS" "$LDAP_BASEDN"
+ldapmodify -Q -Y EXTERNAL -H ldapi:/// <<EOF
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+delete: olcRootPW
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+delete: olcRootPW
+EOF
+rm -f /etc/ldapscripts/ldapscripts.passwd
+
 service slapd stop
 
 # remove samba pkg (only required for samba schema)

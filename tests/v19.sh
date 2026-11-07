@@ -52,6 +52,15 @@ ldapwhoami -x -H ldap://127.0.0.1 \
     -D "$admin_dn" -w "$password" >"$response"
 grep -Fqi "dn:$admin_dn" "$response"
 
+# Configuration credentials are a separate privileged boundary from the DIT.
+config_dn=$(ldapsearch -LLL -Q -Y EXTERNAL -H ldapi:/// \
+    -b 'olcDatabase={0}config,cn=config' -s base olcRootDN | \
+    sed -n 's/^olcRootDN: //p')
+config_dn=${config_dn:-cn=config}
+ldapwhoami -x -H ldap://127.0.0.1 \
+    -D "$config_dn" -w "$password" >"$response"
+grep -Fqi "dn:$config_dn" "$response"
+
 ldapsearch -LLL -x -H ldap://127.0.0.1 \
     -D "$admin_dn" -w "$password" -b "$base_dn" \
     '(|(ou=Users)(ou=Groups)(cn=users))' dn >"$response"
@@ -125,7 +134,7 @@ grep -Rqs '^Suites: trixie' /etc/apt/sources.list.d
 cat >"$result" <<EOF
 package_source=Debian 13 Trixie APT repositories for OpenLDAP, ldap-utils, phpLDAPadmin, Lighttpd, PHP-FPM and LDAP client configuration; TurnKey APT for Webmin LDAP module
 installed_version=slapd $slapd_version; ldap-utils $ldap_utils_version; phpldapadmin $phpldapadmin_version; lighttpd $lighttpd_version; php-fpm $php_version; libldap-common $libldap_version
-runtime_checks=normal init; slapd, Lighttpd and PHP-FPM active; administrator LDAP and trusted LDAPS binds; default Users and Groups structure; LDAP add, search and delete round trip; phpLDAPadmin HTTPS interface; Webmin LDAP module
+runtime_checks=normal init; slapd, Lighttpd and PHP-FPM active; administrator and configuration-database LDAP binds; trusted LDAPS bind; default Users and Groups structure; LDAP add, search and delete round trip; phpLDAPadmin HTTPS interface; Webmin LDAP module
 updater_command=apt-get update; apt-cache policy slapd ldap-utils phpldapadmin lighttpd php-fpm libldap-common
 updater_result=signed metadata refreshed; eligible candidates found; installed versions unchanged
 updater_channel=Debian Trixie and TurnKey Trixie APT repositories
