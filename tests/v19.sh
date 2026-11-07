@@ -33,6 +33,13 @@ lighttpd_version=$(dpkg-query -W -f='${Version}' lighttpd)
 php_version=$(dpkg-query -W -f='${Version}' php-fpm)
 libldap_version=$(dpkg-query -W -f='${Version}' libldap-common)
 
+# Keep Debian's application code intact across installation and package updates.
+dpkg --verify phpldapadmin >"$response"
+if grep -E '/usr/share/phpldapadmin/.*\.php$' "$response"; then
+    echo 'phpLDAPadmin packaged PHP code differs from Debian payload' >&2
+    exit 1
+fi
+
 base_dn=$(ldapsearch -LLL -x -H ldap://127.0.0.1 \
     -s base -b '' namingContexts |
     awk '/^namingContexts: / && !found {
@@ -82,6 +89,13 @@ fi
 ldap_host=$(hostname -f)
 test -s /etc/ldap/tls/ca_cert.pem
 test -s /etc/ldap/tls/openldap_crt.pem
+tls_before=$(sha256sum /etc/ldap/tls/{ca_cert,ca_key,openldap_crt,openldap_key}.pem)
+if turnkey-regen-ldap-certs "$ldap_host" >"$response" 2>&1; then
+    echo 'certificate regeneration overwrote existing trust without --force' >&2
+    exit 1
+fi
+grep -Fq 'Files already exist (files:' "$response"
+test "$(sha256sum /etc/ldap/tls/{ca_cert,ca_key,openldap_crt,openldap_key}.pem)" = "$tls_before"
 LDAPTLS_CACERT=/etc/ldap/tls/ca_cert.pem LDAPTLS_REQCERT=demand \
     ldapwhoami -x -H "ldaps://$ldap_host" \
         -D "$admin_dn" -w "$password" >"$response"
@@ -92,6 +106,7 @@ curl --insecure --fail --location --silent --show-error \
     https://127.0.0.1/ >"$response"
 grep -qi 'phpLDAPadmin' "$response"
 dpkg-query -W webmin-ldap-server >/dev/null
+grep -Fxq 'ldap_user=openldap' /etc/webmin/ldap-server/config
 
 before="$slapd_version|$ldap_utils_version|$phpldapadmin_version|$lighttpd_version|$php_version|$libldap_version"
 apt-get update >/dev/null

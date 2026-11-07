@@ -32,10 +32,6 @@ cat >/etc/phpldapadmin/config.php<<EOF
 ?>
 EOF
 
-# phpldapadmin: tweak footer
-CONF=/usr/share/phpldapadmin/lib/page.php
-sed -i "s|</body>.*|<div id=\"turnkey-credit\" style=\"text-align:center;font-size:11px;\"><a href=\"https://www.turnkeylinux.org/openldap\">OpenLDAP Appliance</a> - Powered by <a href=\"https://www.turnkeylinux.org\">TurnKey Linux</a></div></body>';|" $CONF
-
 # phpldapadmin: enable in lighttpd
 lighty-disable-mod ssl
 lighty-enable-mod phpldapadmin
@@ -65,6 +61,9 @@ sed -i "/^TLS_CACERT/ s|/etc.*|/etc/ldap/tls/ca_cert.pem|" $CLIENT_CONF
 
 # point Webmin LDAP-client module to correct conf
 sed -i "/^auth_ldap/ s|=.*|=$CLIENT_CONF|" /etc/webmin/ldap-client/config
+
+# Webmin certificate generation must assign Debian's slapd service account.
+sed -i 's/^ldap_user=.*/ldap_user=openldap/' /etc/webmin/ldap-server/config
 
 # generate TLS certs and re-initialize ldap
 turnkey-regen-ldap-certs $LDAP_DOMAIN

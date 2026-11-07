@@ -87,10 +87,10 @@ while [[ $# -gt 0 ]]; do
 done
 [[ -n "$host" ]] || usage "Must provide FQDN or IP."
 
-if [[ -n "$force" ]]; then
+if [[ -z "$force" ]]; then
     unset found_files
     for cert_file in $cert_files; do
-        if [[ ! -f "$cert_file" ]]; then
+        if [[ -e "$cert_file" ]]; then
             found_files="$found_files $cert_file"
         fi
     done
